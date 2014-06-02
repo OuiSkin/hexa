@@ -47,7 +47,7 @@ http://sheepdogguides.com/arduino/ar3ne1humDHT11.htm
 #include <Arduino.h>
 #include <pins_arduino.h>
 
-#include "TempHumiditySensor.h"
+#include "TempHumSensor.h"
 
 extern "C" {
 	#include <avr/io.h>
