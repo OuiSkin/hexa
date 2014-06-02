@@ -29,9 +29,6 @@ class TempHumiditySensor {
 		int16_t getTemp();
 		void clockReset();
 
-		float getHumidity();
-		float getTemperature();
-
 	private:
 
 		uint8_t _bitmask;
@@ -54,19 +51,6 @@ int16_t TempHumiditySensor::getHum() {
 // The temperature may be negative, so be careful when handling the fractional part.
 int16_t TempHumiditySensor::getTemp() {
 	return _lastTemperature;
-}
-
-// Return the percentage relative humidity in decimal form
-float TempHumiditySensor::getHumidity() {
-	return float(_lastHumidity)/10;
-}
-
-// Return the percentage relative humidity in decimal form
-//
-// Converts from the internal integer format on demand, so you might want
-// to cache the result.
-float TempHumiditySensor::getTemperature() {
-	return float(_lastTemperature)/10;
 }
 
 #endif /*_TEMPERATURE_HUMIDITY_SENSOR_H_*/
