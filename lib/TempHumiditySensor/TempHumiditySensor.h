@@ -22,22 +22,24 @@ class TempHumiditySensor {
 
 		TempHumiditySensor(uint8_t pin);
 		DHT22_ERROR_t readData();
-		short int getHumidityInt();
-		short int getTemperatureCInt();
+		int16_t getHumidityInt();
+		int16_t getTemperatureCInt();
 		void clockReset();
 
 #if !defined(DHT22_NO_FLOAT)
+
 		float getHumidity();
 		float getTemperatureC();
+
 #endif
 
 	private:
 
 		uint8_t _bitmask;
 		volatile uint8_t *_baseReg;
-		unsigned long _lastReadTime;
-		short int _lastHumidity;
-		short int _lastTemperature;
+		uint32_t _lastReadTime;
+		int16_t _lastHumidity;
+		int16_t _lastTemperature;
 
 };
 
@@ -45,22 +47,19 @@ class TempHumiditySensor {
 //
 // Converts from the internal integer format on demand, so you might want
 // to cache the result.
-inline short int DHT22::getHumidityInt()
-{
+inline short int TempHumiditySensor::getHumidityInt() {
 	return _lastHumidity;
 }
 
 // Get the temperature in decidegrees C, such that 326 means 32.6 degrees C.
 // The temperature may be negative, so be careful when handling the fractional part.
-inline short int DHT22::getTemperatureCInt()
-{
+inline short int TempHumiditySensor::getTemperatureCInt() {
 	return _lastTemperature;
 }
 
 #if !defined(DHT22_NO_FLOAT)
 // Return the percentage relative humidity in decimal form
-inline float DHT22::getHumidity()
-{
+inline float TempHumiditySensor::getHumidity() {
 	return float(_lastHumidity)/10;
 }
 #endif
@@ -70,8 +69,7 @@ inline float DHT22::getHumidity()
 //
 // Converts from the internal integer format on demand, so you might want
 // to cache the result.
-inline float DHT22::getTemperatureC()
-{
+inline float TempHumiditySensor::getTemperatureC() {
 	return float(_lastTemperature)/10;
 }
 #endif //DHT22_SUPPORT_FLOAT
