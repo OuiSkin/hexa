@@ -27,9 +27,9 @@ http://www.sparkfun.com/products/10167
 #include "TempHumSensor.h"
 
 extern "C" {
-	#include <avr/io.h>
-	#include <avr/interrupt.h>
-	#include <avr/pgmspace.h>
+#include <avr/io.h>
+#include <avr/interrupt.h>
+#include <avr/pgmspace.h>
 }
 
 #define DIRECT_READ(base, mask)			(((*(base)) & (mask)) ? 1 : 0)
@@ -81,11 +81,11 @@ DHT22_ERROR_t TempHumSensor::readData() {
 	currentTemperature = 0;
 	checkSum = 0;
 	currentTime = millis();
-	for(i = 0; i < DHT22_DATA_BIT_COUNT; i++) {
+	for (i = 0; i < DHT22_DATA_BIT_COUNT; i++) {
 		bitTimes[i] = 0;
 	}
 
-	if(currentTime - _lastReadTime < 2000) {
+	if (currentTime - _lastReadTime < 2000) {
 		// Caller needs to wait 2 seconds between each call to readData
 		return DHT_ERROR_TOOQUICK;
 	}
@@ -101,8 +101,7 @@ DHT22_ERROR_t TempHumSensor::readData() {
 	retryCount = 0;
 
 	do {
-		if (retryCount > 125)
-		{
+		if (retryCount > 125) {
 			return DHT_BUS_HUNG;
 		}
 		retryCount++;
@@ -127,8 +126,8 @@ DHT22_ERROR_t TempHumSensor::readData() {
 	retryCount = 0;
 
 	do {
-		if (retryCount > 25) //(Spec is 20 to 40 us, 25*2 == 50 us)
-		{
+		//(Spec is 20 to 40 us, 25*2 == 50 us)
+		if (retryCount > 25) {
 			return DHT_ERROR_NOT_PRESENT;
 		}
 		retryCount++;
@@ -139,8 +138,8 @@ DHT22_ERROR_t TempHumSensor::readData() {
 	retryCount = 0;
 
 	do {
-		if (retryCount > 50) //(Spec is 80 us, 50*2 == 100 us)
-		{
+		//(Spec is 80 us, 50*2 == 100 us)
+		if (retryCount > 50) {
 			return DHT_ERROR_ACK_TOO_LONG;
 		}
 		retryCount++;
@@ -152,7 +151,8 @@ DHT22_ERROR_t TempHumSensor::readData() {
 		// Find the start of the sync pulse
 		retryCount = 0;
 		do {
-			if (retryCount > 35) //(Spec is 50 us, 35*2 == 70 us) {
+			//(Spec is 50 us, 35*2 == 70 us)
+			if (retryCount > 35) {
 				return DHT_ERROR_SYNC_TIMEOUT;
 			}
 
@@ -164,7 +164,8 @@ DHT22_ERROR_t TempHumSensor::readData() {
 		retryCount = 0;
 
 		do {
-			if (retryCount > 50) //(Spec is 80 us, 50*2 == 100 us) {
+			//(Spec is 80 us, 50*2 == 100 us) {
+			if (retryCount > 50) {
 				return DHT_ERROR_DATA_TIMEOUT;
 			}
 
@@ -172,59 +173,59 @@ DHT22_ERROR_t TempHumSensor::readData() {
 			delayMicroseconds(2);
 		} while(DIRECT_READ(reg, bitmask));
 
-		bitTimes[i] = retryCount;
-	}
-	// Now bitTimes have the number of retries (us *2)
-	// that were needed to find the end of each data bit
-	// Spec: 0 is 26 to 28 us
-	// Spec: 1 is 70 us
-	// bitTimes[x] <= 11 is a 0
-	// bitTimes[x] >  11 is a 1
-	// Note: the bits are offset by one from the data sheet, not sure why
-	for(i = 0; i < 16; i++) {
-		if(bitTimes[i + 1] > 11) {
-			currentHumidity |= (1 << (15 - i));
+			bitTimes[i] = retryCount;
 		}
-	}
-
-	for(i = 0; i < 16; i++) {
-		if(bitTimes[i + 17] > 11) {
-			currentTemperature |= (1 << (15 - i));
+		// Now bitTimes have the number of retries (us *2)
+		// that were needed to find the end of each data bit
+		// Spec: 0 is 26 to 28 us
+		// Spec: 1 is 70 us
+		// bitTimes[x] <= 11 is a 0
+		// bitTimes[x] >  11 is a 1
+		// Note: the bits are offset by one from the data sheet, not sure why
+		for(i = 0; i < 16; i++) {
+			if (bitTimes[i + 1] > 11) {
+				currentHumidity |= (1 << (15 - i));
+			}
 		}
-	}
 
-	for(i = 0; i < 8; i++) {
-		if(bitTimes[i + 33] > 11) {
-			checkSum |= (1 << (7 - i));
+		for(i = 0; i < 16; i++) {
+			if (bitTimes[i + 17] > 11) {
+				currentTemperature |= (1 << (15 - i));
+			}
 		}
+
+		for(i = 0; i < 8; i++) {
+			if (bitTimes[i + 33] > 11) {
+				checkSum |= (1 << (7 - i));
+			}
+		}
+
+		_lastHumidity = currentHumidity & 0x7FFF;
+
+		if (currentTemperature & 0x8000) {
+			// Below zero, non standard way of encoding negative numbers!
+			// Convert to native negative format.
+			_lastTemperature = -currentTemperature & 0x7FFF;
+		}
+		else {
+			_lastTemperature = currentTemperature;
+		}
+
+		csPart1 = currentHumidity >> 8;
+		csPart2 = currentHumidity & 0xFF;
+		csPart3 = currentTemperature >> 8;
+		csPart4 = currentTemperature & 0xFF;
+
+		if (checkSum == ((csPart1 + csPart2 + csPart3 + csPart4) & 0xFF)) {
+			return DHT_ERROR_NONE;
+		}
+
+		return DHT_ERROR_CHECKSUM;
 	}
 
-	_lastHumidity = currentHumidity & 0x7FFF;
-
-	if(currentTemperature & 0x8000) {
-		// Below zero, non standard way of encoding negative numbers!
-		// Convert to native negative format.
-		_lastTemperature = -currentTemperature & 0x7FFF;
+	//
+	// This is used when the millis clock rolls over to zero
+	//
+	void TempHumSensor::clockReset() {
+		_lastReadTime = millis();
 	}
-	else {
-		_lastTemperature = currentTemperature;
-	}
-
-	csPart1 = currentHumidity >> 8;
-	csPart2 = currentHumidity & 0xFF;
-	csPart3 = currentTemperature >> 8;
-	csPart4 = currentTemperature & 0xFF;
-
-	if(checkSum == ((csPart1 + csPart2 + csPart3 + csPart4) & 0xFF)) {
-		return DHT_ERROR_NONE;
-	}
-
-	return DHT_ERROR_CHECKSUM;
-}
-
-//
-// This is used when the millis clock rolls over to zero
-//
-void TempHumSensor::clockReset() {
-	_lastReadTime = millis();
-}
