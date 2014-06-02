@@ -33,6 +33,7 @@ class TempHumiditySensor {
 
 		uint8_t _bitmask;
 		volatile uint8_t *_baseReg;
+
 		uint32_t _lastReadTime;
 		int16_t _lastHumidity;
 		int16_t _lastTemperature;
