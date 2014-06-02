@@ -8,9 +8,6 @@
  */
 
 #include <Arduino.h>
-#include "ChibiOS_AVR.h"
-#include "Tools.h"
-#include "Serial.h"
 
 enum ColorName {
 	BLACK, WHITE, RED_PURE, GREEN_PURE, BLUE_PURE, DARK_RED, RED, LIGHT_RED,
@@ -61,9 +58,6 @@ class Led {
 		uint8_t _redPin;
 		uint8_t _greenPin;
 		uint8_t _bluePin;
-
-		// MUTEXES
-		MUTEX_DECL(rgbValuesMutex);
 
 		// CONSTANTS
 		static const uint8_t DEFAULT_LED_MAX_BRIGHTNESS   = 255;
