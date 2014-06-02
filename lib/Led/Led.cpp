@@ -131,7 +131,7 @@ void Led::fade(uint16_t duration, uint8_t redStartValue, uint8_t redEndValue,
 		blueValue = (int16_t)blueStartValue + (blueDiff * i / ((int16_t)duration / (int16_t)delayValue));
 
 		shine(redValue, greenValue, blueValue);
-		chThdSleepMilliseconds(delayValue);
+		delay(delayValue);
 	}
 
 	shine(redEndValue, greenEndValue, blueEndValue);
