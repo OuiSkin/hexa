@@ -1,8 +1,9 @@
 #ifndef _TEMPERATURE_HUMIDITY_SENSOR_H_
 #define _TEMPERATURE_HUMIDITY_SENSOR_H_
 
-#include <inttypes.h>
-// DHT22 is the technical name
+// #include <inttypes.h>
+
+// DHT22 is the technical name of the sensor, so we keep it that way
 #define DHT22_ERROR_VALUE -995
 
 typedef enum {
@@ -21,7 +22,9 @@ class TempHumiditySensor {
 	public:
 
 		TempHumiditySensor(uint8_t pin);
+
 		DHT22_ERROR_t readData();
+
 		int16_t getHumidityInt();
 		int16_t getTemperatureCInt();
 		void clockReset();
@@ -47,13 +50,13 @@ class TempHumiditySensor {
 //
 // Converts from the internal integer format on demand, so you might want
 // to cache the result.
-inline short int TempHumiditySensor::getHumidityInt() {
+int16_t TempHumiditySensor::getHumidityInt() {
 	return _lastHumidity;
 }
 
 // Get the temperature in decidegrees C, such that 326 means 32.6 degrees C.
 // The temperature may be negative, so be careful when handling the fractional part.
-inline short int TempHumiditySensor::getTemperatureCInt() {
+int16_t TempHumiditySensor::getTemperatureCInt() {
 	return _lastTemperature;
 }
 
