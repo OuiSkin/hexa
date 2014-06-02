@@ -17,11 +17,11 @@ typedef enum {
 	DHT_ERROR_TOOQUICK
 } DHT22_ERROR_t;
 
-class TempHumiditySensor {
+class TempHumSensor {
 
 	public:
 
-		TempHumiditySensor(uint8_t pin);
+		TempHumSensor(uint8_t pin);
 
 		DHT22_ERROR_t readData();
 
@@ -44,13 +44,13 @@ class TempHumiditySensor {
 //
 // Converts from the internal integer format on demand, so you might want
 // to cache the result.
-int16_t TempHumiditySensor::getHum() {
+int16_t TempHumSensor::getHum() {
 	return _lastHumidity;
 }
 
 // Get the temperature in decidegrees C, such that 326 means 32.6 degrees C.
 // The temperature may be negative, so be careful when handling the fractional part.
-int16_t TempHumiditySensor::getTemp() {
+int16_t TempHumSensor::getTemp() {
 	return _lastTemperature;
 }
 

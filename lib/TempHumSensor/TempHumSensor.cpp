@@ -19,29 +19,6 @@
 
    Humidity and Temperature Sensor DHT22 info found at
 http://www.sparkfun.com/products/10167
-
-Version 0.5: 15 Jan 2012 by Craig Ringer
-- Updated to build against Arduino 1.0
-- Made accessors inline in the header so they can be optimized away
-
-Version 0.4: 24-Jan-2011 by Ben Adams
-Added return code constants to keywords.txt
-Returns DHT_ERROR_CHECKSUM on check sum mismatch 
-
-Version 0.3: 17-Jan-2011 by Ben Adams
-This version reads data
-Needs check sum code added at the end of readData
-
-Version 0.2: 16-Jan-2011 by Ben Adams
-Changed coding style to match other Arduino libraries.
-This version will not read data either!
-
-Version 0.1: 10-Jan-2011 by Ben Adams nethoncho AT gmail.com
-First Version is a skeleton. This version will not read data!
-Code adapted from the following sources:
-The Arduino OneWire lib
-http://sheepdogguides.com/arduino/ar3ne1humDHT11.htm
-
 */
 
 #include <Arduino.h>
