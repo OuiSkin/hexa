@@ -41,12 +41,25 @@ extern "C" {
 // This should be 40, but the sensor is adding an extra bit at the start
 #define DHT22_DATA_BIT_COUNT 41
 
+// Constructor
 TempHumSensor::TempHumSensor(uint8_t pin) {
 	_bitmask = digitalPinToBitMask(pin);
 	_baseReg = portInputRegister(digitalPinToPort(pin));
 	_lastReadTime = millis();
 	_lastHumidity = DHT22_ERROR_VALUE;
 	_lastTemperature = DHT22_ERROR_VALUE;
+}
+
+// Report the humidity in .1 percent increments, such that 635 means 63.5% relative humidity
+// Converts from the internal integer format on demand, so you might want to cache the result.
+int16_t TempHumSensor::getHum() {
+	return _lastHumidity;
+}
+
+// Get the temperature in decidegrees C, such that 326 means 32.6 degrees C.
+// The temperature may be negative, so be careful when handling the fractional part.
+int16_t TempHumSensor::getTemp() {
+	return _lastTemperature;
 }
 
 //
