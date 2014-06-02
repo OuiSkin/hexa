@@ -29,12 +29,8 @@ class TempHumiditySensor {
 		int16_t getTemperatureCInt();
 		void clockReset();
 
-#if !defined(DHT22_NO_FLOAT)
-
 		float getHumidity();
 		float getTemperatureC();
-
-#endif
 
 	private:
 
@@ -60,14 +56,11 @@ int16_t TempHumiditySensor::getTemperatureCInt() {
 	return _lastTemperature;
 }
 
-#if !defined(DHT22_NO_FLOAT)
 // Return the percentage relative humidity in decimal form
 inline float TempHumiditySensor::getHumidity() {
 	return float(_lastHumidity)/10;
 }
-#endif
 
-#if !defined(DHT22_NO_FLOAT)
 // Return the percentage relative humidity in decimal form
 //
 // Converts from the internal integer format on demand, so you might want
@@ -75,6 +68,5 @@ inline float TempHumiditySensor::getHumidity() {
 inline float TempHumiditySensor::getTemperatureC() {
 	return float(_lastTemperature)/10;
 }
-#endif //DHT22_SUPPORT_FLOAT
 
 #endif /*_TEMPERATURE_HUMIDITY_SENSOR_H_*/
