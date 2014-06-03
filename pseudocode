@@ -1,0 +1,52 @@
+
+// Wake the Hexa - start looping
+
+// LED 1 blinks
+
+// Measure Temperature && Humidity 
+
+// Place the sensor on the skin
+	// Place on zone 1 && value > 0
+		// Records measures during 2 secs
+		// Compute the average
+		// Store the average
+		// LED 1 stops blinking 
+		// LED 2 starts blinking
+	// Place on zone 2 && value > 0
+                // Records measures during 2 secs
+                // Compute the average
+                // Store the average
+                // LED 2 stops blinking 
+                // LED 3 starts blinking 
+        // Place on zone 3 && value > 0
+                // Records measures during 2 secs
+                // Compute the average
+                // Store the average
+                // LED 3 stops blinking
+                // LED 4 starts blinking
+        // Place on zone 4 && value > 0
+                // Records measures during 2 secs
+                // Compute the average
+                // Store the average
+                // LED 4 stops blinking
+                // LED 5 starts blinking
+        // Place on zone 5 && value > 0
+                // Records measures during 2 secs
+                // Compute the average
+                // Store the average
+                // LED 5 stops blinking
+                // LED 6 starts blinking
+        // Place on zone 6 && value > 0
+                // Records measures during 2 secs
+                // Compute the average
+                // Store the average
+                // LED 6 stops blinking
+
+// Wait 5 secs
+
+// Transmit values stored
+
+// LEDs switch off
+
+ 
+
