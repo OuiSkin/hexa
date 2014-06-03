@@ -1,6 +1,5 @@
 #include <Arduino.h>
-
-uint32_t counter;
+#include "print.h"
 
 void setup() {
 	Serial.begin(115200);
@@ -9,7 +8,6 @@ void setup() {
 }
 
 void loop() {
-	Serial.println(counter);
-	counter = counter + 1;
+	printCounter();
 	delay(500);
 }
