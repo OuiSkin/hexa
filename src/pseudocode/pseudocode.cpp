@@ -15,7 +15,7 @@ SteamSensor steamsensor;
 void sendAverage();
 
 uint8_t sum;			// declare sum 
-uint8_t nbr_value;		// declare n 	
+uint8_t nbrValue;		// declare n 	
 uint8_t zone;			// declare zones
 uint8_t average[6]; 	// declare the array
 
@@ -24,11 +24,6 @@ unsigned long startTime;
 unsigned long stopTime;
 
 void setup ()	{
-
-	// Hexa receives signal
-	/*
-	*	TO BE IMPLEMENTED
-	*/
 
 	// Init serial
 	Serial.begin(115200);
@@ -47,6 +42,11 @@ void setup ()	{
 
 void loop ()	{
 
+	// Hexa receives signal
+	/*
+	*	TO BE IMPLEMENTED
+	*/
+
 	// LED lights up
 	led.shine(WHITE);
 
@@ -58,7 +58,7 @@ void loop ()	{
 
 		sum = 0;
 
-		nbr_value = 0; 
+		nbrValue = 0; 
 		
 		while(steamsensor.getValue() > 0)		// Place sensor on zone i
 		{
@@ -66,7 +66,7 @@ void loop ()	{
 			sum += steamsensor.getValue();
 
 			led.blink();						// Blink during measure
-			nbr_value += 1;						// Increment the number of measures
+			nbrValue += 1;						// Increment the number of measures
 			steamsensor.debug();
 
 		}
@@ -75,7 +75,7 @@ void loop ()	{
 
 		if(stopTime - startTime >= 2000)		// If time is over 2 seconds
 		{
-			average[zone] = sum / nbr_value;		// compute the average
+			average[zone] = sum / nbrValue;		// compute the average
 			sendAverage();		// send the average 
 		} 
 		
