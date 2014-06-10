@@ -167,6 +167,17 @@ void Led::turnOff() {
 }
 
 /**
+ * @brief LED blinks.
+ */
+
+ void Led::blink()	{
+ 	shine(WHITE);
+ 	delay(500);
+ 	turnOff();
+ 	delay(500);
+ }
+
+/**
  * @brief Color switcher used to get rgb[] values of different colors by their
  * name such as RED, GREEN, BLUE, etc.
  *
