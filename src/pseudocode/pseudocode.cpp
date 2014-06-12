@@ -16,6 +16,8 @@ SteamSensor steamsensor;
 void sendAverage();
 
 //Variables
+uint16_t steamSensorMin = 1023;        // minimum sensor value before calibration
+uint16_t steamSensorMax = 0;           // maximum sensor value before calibration
 uint16_t sum;			// declare sum 
 uint8_t nbrValue;		// declare n 	
 uint8_t zone;			// declare zones
@@ -38,6 +40,28 @@ void setup ()	{
 	{
 		average[0] = 0;
 	}
+
+ 	// calibrate during the first 2 seconds 
+  	while (millis() < 2000) 
+  	{
+  		led.blink();
+
+  		steamsensor.readValue();
+    	// record the maximum sensor value
+
+      	steamSensorMax = 125;		// Determined off calibration
+  		Serial.print("Max is ");
+  		Serial.println(steamSensorMax);
+
+    	// record the minimum sensor value
+    	if (steamsensor.getValue() < steamSensorMin) 
+      	{
+      		steamSensorMin = steamsensor.getValue();	// Determined during calibration
+      		Serial.print("Min is ");
+      		Serial.println(steamSensorMin);
+  		}
+  	}
+
 
 }
 
@@ -68,12 +92,12 @@ void loop ()	{
 			steamsensor.readValue(); 	// Read and add it to sum
 			steamsensor.debug();	
 			sum += steamsensor.getValue();
+			
 			Serial.print("sum is ");
 			Serial.println(sum);
 
 			led.blink();						// Blink during measure
 			nbrValue += 1;						// Increment the number of measures
-			
 
 			steamsensor.readValue();		// Updated mesure to enter the loop
 		}
@@ -91,7 +115,7 @@ void loop ()	{
 			Serial.print("nbrValue is ");
 			Serial.println(nbrValue);				
 
-			average[zone] = sum / nbrValue;		// compute the average
+			average[zone] = map(sum / nbrValue, steamSensorMin, steamSensorMax, 0, 100);	// compute the average
 			sendAverage();		// send the average 
 			
 			Serial.print("average zone ");
