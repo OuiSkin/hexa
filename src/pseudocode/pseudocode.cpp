@@ -7,7 +7,6 @@
 #include <Arduino.h>
 #include "SteamSensor.h"
 #include "Led.h"
-#include <string.h>
 
 //Object
 Led led = Led(11, 12, 13);
@@ -25,7 +24,6 @@ uint8_t zone;			// declare zones
 uint16_t average[6]; 	// declare the array
 unsigned long startTime;
 unsigned long stopTime;
-String json;
 
 void setup ()	{
 
@@ -143,12 +141,16 @@ void loop ()	{
 
 void sendJson(uint8_t z, uint16_t a)
 {
-	json = "[{zone:";
-	json += z;
-	json += ",avg:";
-	json += a;
-	json += "}]";
-	Serial.println(json);
+	Serial.print(F("{"));
+
+		Serial.print(F("\"zone\":"));
+		Serial.print(z);
+		Serial.print(F(","));
+
+		Serial.print(F("\"average\":"));
+		Serial.print(a);
+
+	Serial.print(F("}"));
 }
 	
 		
