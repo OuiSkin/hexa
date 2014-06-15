@@ -49,7 +49,7 @@ void setup ()	{
   		steamsensor.readValue();
     	// record the maximum sensor value
 
-      	steamSensorMax = 125;		// Determined off calibration
+      	steamSensorMax = 160;		// Determined off calibration
   		// Serial.print("Max is ");
   		// Serial.println(steamSensorMax);
 
