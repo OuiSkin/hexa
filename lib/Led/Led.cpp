@@ -170,11 +170,11 @@ void Led::turnOff() {
  * @brief LED blinks.
  */
 
- void Led::blink()	{
+ void Led::blink(uint16_t duration)	{
  	shine(WHITE);
- 	delay(500);
+ 	delay(duration);
  	turnOff();
- 	delay(500);
+ 	delay(duration);
  }
 
 /**

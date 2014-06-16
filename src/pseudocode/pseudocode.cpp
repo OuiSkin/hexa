@@ -44,7 +44,7 @@ void setup ()	{
  	// calibrate during the first 2 seconds 
   	while (millis() < 2000) 
   	{
-  		led.blink();
+  		led.blink(500);
 
   		steamsensor.readValue();
     	// record the maximum sensor value
@@ -90,13 +90,13 @@ void loop ()	{
 		while(steamsensor.getValue() > steamSensorMin)		// Place sensor on zone i
 		{
 			steamsensor.readValue(); 	// Read and add it to sum
-			// steamsensor.debug();	
+			steamsensor.debug();	
 			sum += steamsensor.getValue();
 			
 			// Serial.print("sum is ");
 			// Serial.println(sum);
 
-			led.blink();						// Blink during measure
+			led.blink(200);						// Blink during measure
 			nbrValue += 1;						// Increment the number of measures
 
 			steamsensor.readValue();		// Updated mesure to enter the loop
