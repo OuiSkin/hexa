@@ -90,7 +90,7 @@ void loop ()	{
 		while(steamsensor.getValue() > steamSensorMin)		// Place sensor on zone i
 		{
 			steamsensor.readValue(); 	// Read and add it to sum
-			steamsensor.debug();	
+			// steamsensor.debug();
 			sum += steamsensor.getValue();
 			
 			// Serial.print("sum is ");

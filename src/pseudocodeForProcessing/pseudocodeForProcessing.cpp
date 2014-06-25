@@ -9,7 +9,7 @@
 #include "Led.h"
 
 //Object
-Led led = Led(11, 12, 13);
+Led led = Led(10, 11, 12);
 SteamSensor steamsensor;
 
 // PROTOTYPES
