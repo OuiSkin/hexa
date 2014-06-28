@@ -49,6 +49,8 @@ uint8_t SteamSensor::initSensor(uint16_t initDuration, Led led){
   		_steamSensorMin = readValue;	// Determined during calibration
     }
   }
+  // Serial.print("min : ");
+  // Serial.println(_steamSensorMin);
   led.colorSwitcher(GREEN);
   led.shine();
   delay(400);
