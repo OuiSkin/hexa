@@ -18,10 +18,11 @@ class SteamSensor {
 
 		SteamSensor();
 
-		void init();
+		uint8_t init(uint8_t initDuration, unsigned long maxDuration);
 
 		//	SENSORS
 		void readValue();
+		bool isAvailable();
 		uint8_t getValue();
 		void debug();
 
@@ -29,6 +30,10 @@ class SteamSensor {
 
 		//	VARIABLES
 		uint8_t _steamValue;
+		bool _isNew;
+		unsigned long _startTime;
+		unsigned long _stopTime;
+		unsigned long _maxDuration;
 		static const uint8_t STEAM_SENSOR_PIN = 0;
 };
 
