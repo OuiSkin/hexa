@@ -15,31 +15,44 @@
 /**
  * @brief MoitsureSensors Class Constructors
  */
-SteamSensor::SteamSensor(){
-	// nothing to do here
-}
-
-void SteamSensor::init(uint8_t initDuration, unsigned long maxDuration){
+SteamSensor::SteamSensor(unsigned long maxDuration){
 	_steamValue = 0;
-	_isNew = false;
 	_maxDuration = maxDuration;
 	_startTime = millis();
 	_stopTime = _startTime;
-	uint16_t steamSensorMin = 1023;
-	unsigned long initStart = _startTime;
-	unsigned long initStop = _startTime;
-  	while ((initStop - initStart ) < initDuration) 
-  	{
-  		led.blink(500);
-		initStop = millis();
-  		if (steamsensor.isAvailable()) 
-      	{
-      		steamSensorMin = steamsensor.getValue();	// Determined during calibration
-      		// Serial.print("Min is ");
-      		// Serial.println(steamSensorMin);
-  		}
-  	}
-  	return steamSensorMin;
+    _steamSensorMin = 1023;
+}
+
+uint8_t SteamSensor::initSensor(uint16_t initDuration, Led led){
+	// uint8_t readValue = SteamSensor::getValue();
+  uint8_t readValue = SteamSensor::getValue();
+  unsigned long initStart = millis();
+  unsigned long initStop = initStart;
+  uint8_t redValue = 0;
+  uint8_t greenValue = 0;
+  uint8_t blueValue = 0;
+  led.setRgb(redValue, greenValue, blueValue);
+  led.shine();
+  while ((initStop - initStart ) < initDuration)
+  {
+    led.setRgb(redValue, greenValue, blueValue);
+    led.shine();
+    delay(10);
+    greenValue+=5;
+    redValue+=5;
+    blueValue+=5;
+    // led.blink(450);
+    initStop = millis();
+    readValue = SteamSensor::getValue();
+    if (_steamSensorMin > readValue)
+    {
+  		_steamSensorMin = readValue;	// Determined during calibration
+    }
+  }
+  led.colorSwitcher(GREEN);
+  led.shine();
+  delay(400);
+return _steamSensorMin;
 }
 
 
@@ -51,31 +64,27 @@ void SteamSensor::init(uint8_t initDuration, unsigned long maxDuration){
  * @brief
  */
 bool SteamSensor::isAvailable(){
-	_stopTime = millis();
-	return (_isNew && (_stopTime - _startTime < _maxDuration )) ;
+    return SteamSensor::getValue() > _steamSensorMin;
 }
 
 /**
  * @brief
  */
-void SteamSensor::readValue(){
-	if (!self.isAvailable())< {
-		self._isNew = true;
-		_startTime = _stopTime;
-		_steamValue = analogRead(STEAM_SENSOR_PIN)
-	}
-}
+//void SteamSensor::readValue(){
+//	if (!SteamSensor::isAvailable()){
+//		_isNew = true;
+//		_startTime = _stopTime;
+//		_steamValue = analogRead(STEAM_SENSOR_PIN);
+//        Serial.print("Capturing :");
+//        Serial.println(_steamValue);
+//	}
+//}
 
 /**
  * @brief
  */
 uint8_t SteamSensor::getValue(){
-	if (!self.isAvailable())
-	{
-		self.readValue();
-	}
-	_isNew = false;
-	// to be implemented
+    _steamValue = analogRead(STEAM_SENSOR_PIN);
 	return _steamValue;
 }
 

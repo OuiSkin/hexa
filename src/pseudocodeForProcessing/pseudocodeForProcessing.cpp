@@ -8,12 +8,18 @@
 #include "SteamSensor.h"
 #include "Led.h"
 
+// Constantes
+#define INITDURATION (uint16_t)4000
+#define REDPIN 12
+#define GREENPIN 11
+#define BLUEPIN 10
+
 //Object
-Led led = Led(10, 11, 12);
-SteamSensor steamsensor;
+ Led led = Led(REDPIN, GREENPIN, BLUEPIN);
+ SteamSensor steamsensor(3);
 
 // PROTOTYPES
-void sendJson(uint8_t z, uint16_t a);
+ void sendJson(uint8_t z, uint16_t a);
 
 //Variables
 uint16_t steamSensorMin = 1023;        // minimum sensor value before calibration
@@ -28,41 +34,20 @@ unsigned long stopTime;
 void setup ()	{
 
 	// Init serial
-	Serial.begin(115200);
-
+	Serial.begin(9600);
 	// Init the sensor
-	steamSensorMin = steamsensor.init(2000, 30);
+	steamSensorMin = steamsensor.initSensor(INITDURATION, led);
+	// Serial.print("Min is ");
+	// Serial.println(steamSensorMin);
 
 	// Init variables
 	zone = 0;
 
+    // Init average data
 	for (int i = 0; i < 6; ++i)
 	{
 		average[0] = 0;
 	}
-
- 	// // calibrate during the first 2 seconds 
-  // 	while (millis() < 2000) 
-  // 	{
-  // 		led.blink(500);
-
-  // 		steamsensor.readValue();
-  //   	// record the maximum sensor value
-
-  //     	steamSensorMax = 160;		// Determined off calibration
-  // 		// Serial.print("Max is ");
-  // 		// Serial.println(steamSensorMax);
-
-  //   	// record the minimum sensor value
-  //   	if (steamsensor.getValue() < steamSensorMin) 
-  //     	{
-  //     		steamSensorMin = steamsensor.getValue();	// Determined during calibration
-  //     		// Serial.print("Min is ");
-  //     		// Serial.println(steamSensorMin);
-  // 		}
-  // 	}
-
-
 }
 
 void loop ()	{
@@ -73,72 +58,97 @@ void loop ()	{
 	*/
 
 	// LED lights up
-	led.shine(WHITE);
+	led.colorSwitcher(WHITE);
+	led.shine();
+	delay(10);
 
-	// steamsensor.readValue();
-
-	// if (steamsensor.getValue() > 0)
+    // Does SteamSensor has data Availabel
 	if (steamsensor.isAvailable())
 	{	
+        // Init time counter and varaibles
 		startTime = millis();		// When value are > 0 ==> start the timer
+		stopTime = startTime;		// When value are > 0 ==> start the timer
 		sum = 0;
-		nbrValue = 0; 
-		// steamsensor.readValue();		// Updated mesure to enter the loop
-		// while(steamsensor.getValue() > steamSensorMin)		// Place sensor on zone i
-		while(steamsensor.getValue() > steamSensorMin)		// Place sensor on zone i
-		{
-			// steamsensor.readValue(); 	// Read and add it to sum
-			sum += steamsensor.getValue();
-			// Serial.print("sum is ");
-			// Serial.println(sum);
-			led.blink(200);						// Blink during measure
-			nbrValue += 1;						// Increment the number of measures
-			// steamsensor.readValue();		// Updated mesure to enter the loop
-		}
-		stopTime = millis();			// When value is back to 0 ==> stop the timer
-		// Serial.print("time is ");
-		// Serial.println(stopTime - startTime);
+		nbrValue = 0;
+        // Getting data for average
+//		while(steamsensor.getValue() > steamSensorMin)		// Place sensor on zone i
+        // Getting data for 2000 millisecond
+        while(stopTime - startTime <= 2000)		// Place sensor on zone i
+        {
+        	uint8_t sensorValue = steamsensor.getValue();
+        	if (sensorValue > 35){    		
+	        	if (sensorValue > steamSensorMin) {
+	        		sum += sensorValue;
+	        		led.colorSwitcher(GREEN);
+        			led.shine();
+	        		delay(20);
+	                nbrValue += 1;						// Increment the number of measures
+	                // steamsensor.readValue();		// Updated mesure to enter the loop
+	            }else{
+	            	delay(250);
+	            	return;
+	            }
+        	}else{
+        		startTime = stopTime;
+        		sum = 0;
+        		nbrValue = 0;
+        	}
+            stopTime = millis();			// When value is back to 0 ==> stop the timer
+        }
 		if(stopTime - startTime >= 2000)		// If time is over 2 seconds
 		{
-			// Serial.print("sum is ");
-			// Serial.println(sum);
-			// Serial.print("nbrValue is ");
-			// Serial.println(nbrValue);				
-			average[zone] = map(sum / nbrValue, steamSensorMin, steamSensorMax, 0, 100);	// compute the average
+            led.colorSwitcher(BLUE);
+            led.shine();
+            delay(100);
+            average[zone] = map(sum / nbrValue, steamSensorMin, steamSensorMax, 0, 100);	// compute the average
+            // Serial.print("Capture valide : ");
+            // Serial.print(stopTime - startTime);
+            // Serial.print(", sum / nbrValue = ");
+            // Serial.print(sum / nbrValue);
+            // Serial.print(", nbrVal ");
+            // Serial.print(nbrValue);
+            // Serial.print(", zone ");
+            // Serial.print(zone);
+            // Serial.print(", Seuil Min ");
+            // Serial.print(steamSensorMin);
+            // Serial.print(", average[zone] :");
+            // Serial.println(average[zone]);
 			// json = "[{zone:";
 			// json += zone;
 			// json += ",avg:";
 			// json += average[zone];
 			// json += "}]";
 			// Serial.println(json);
-//			Serial.println(average[zone]);
-            Serial.println("10");
+            // Serial.print("Moyenne : ");
+            Serial.println(average[zone]);
+//            Serial.println("10");
 			// Serial.print("average zone ");
 			// Serial.print(zone);
 			// Serial.print(" is ");
 			// Serial.println(average[zone]);
-			zone = (zone + 1)%6 ;
-		} 
-	}	
+            led.blink(1500);
+            zone = (zone + 1)%6 ;
+        }
+    }
 }
 
 void sendJson(uint8_t z, uint16_t a)
 {
 	Serial.print(F("{"));
 
-		Serial.print(F("\"zone\":"));
-		Serial.print(z);
-		Serial.print(F(","));
+	Serial.print(F("\"zone\":"));
+	Serial.print(z);
+	Serial.print(F(","));
 
-		Serial.print(F("\"average\":"));
-		Serial.print(a);
+	Serial.print(F("\"average\":"));
+	Serial.print(a);
 
 	Serial.print(F("}"));
 }
-	
-		
 
 
 
- 
+
+
+
 

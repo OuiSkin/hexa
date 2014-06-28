@@ -8,6 +8,7 @@
  */
 
 #include <Arduino.h>
+#include "Led.h"
 
 /**
  * @class SteamSensors
@@ -16,9 +17,9 @@ class SteamSensor {
 
 	public:
 
-		SteamSensor();
+		SteamSensor(unsigned long maxDuration);
 
-		uint8_t init(uint8_t initDuration, unsigned long maxDuration);
+		uint8_t initSensor(uint16_t initDuration, Led led);
 
 		//	SENSORS
 		void readValue();
@@ -30,10 +31,10 @@ class SteamSensor {
 
 		//	VARIABLES
 		uint8_t _steamValue;
-		bool _isNew;
 		unsigned long _startTime;
 		unsigned long _stopTime;
 		unsigned long _maxDuration;
+        uint16_t _steamSensorMin = 1023;
 		static const uint8_t STEAM_SENSOR_PIN = 0;
 };
 
