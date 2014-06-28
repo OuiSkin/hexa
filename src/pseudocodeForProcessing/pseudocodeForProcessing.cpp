@@ -28,7 +28,7 @@ unsigned long stopTime;
 void setup ()	{
 
 	// Init serial
-	Serial.begin(9600);
+	Serial.begin(115200);
 
 	// Init the sensor
 	steamsensor.init();
