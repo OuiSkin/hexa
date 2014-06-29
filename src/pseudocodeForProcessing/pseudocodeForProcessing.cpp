@@ -190,17 +190,22 @@ void loop ()	{
 //             zone = (zone + 1) % 6 ;
 //         }
     }
-	if(stopTime - startTime >= 2000)		// If time is over 2 seconds
+	while(stopTime - startTime >= 2000)		// If time is over 2 seconds
 	{
 		led.colorSwitcher(RED);
 		led.shine();
 		delay(100);
 	    average[zone] = map(sum / nbrValue, steamSensorMin, steamSensorMax, 0, 100);	// compute the average
-	    sendAverage();
-	    stopTime = 0; 
-	    startTime = 0;
-	    led.blink(1500);
-	    zone = (zone + 1) % 6 ;
+        if (!steamsensor.isAvailable())
+        {
+            blueTooth.println(average[zone]);
+//            sendAverage();
+            stopTime = 0;
+            startTime = 0;
+            led.blink(500);
+            zone = (zone + 1) % 6 ;
+            return;
+        }
 	}
 
 }
