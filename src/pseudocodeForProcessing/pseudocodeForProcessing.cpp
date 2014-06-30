@@ -98,9 +98,8 @@ void loop ()	{
 	*	TO BE IMPLEMENTED
 	*/
 	// LED lights up
-	led.colorSwitcher(BLUE);
+	led.colorSwitcher(WHITE);
 	led.shine();
-	delay(10);
 
     // Does SteamSensor has data Availabel
 	if (steamsensor.isAvailable())
@@ -194,7 +193,6 @@ void loop ()	{
 	{
 		led.colorSwitcher(RED);
 		led.shine();
-		delay(100);
 	    average[zone] = map(sum / nbrValue, steamSensorMin, steamSensorMax, 0, 100);	// compute the average
         if (!steamsensor.isAvailable())
         {
