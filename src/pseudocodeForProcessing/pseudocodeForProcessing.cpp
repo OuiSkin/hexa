@@ -98,24 +98,29 @@ void loop ()	{
 	*	TO BE IMPLEMENTED
 	*/
 	// LED lights up
-	led.colorSwitcher(WHITE);
+	led.colorSwitcher(PURPLE);
 	led.shine();
+
 
     // Does SteamSensor has data Availabel
 	if (steamsensor.isAvailable())
-	{	
+	{
         // Init time counter and varaibles
 		startTime = millis();		// When value are > 0 ==> start the timer
 		stopTime = startTime;		// When value are > 0 ==> start the timer
 		sum = 0;
 		nbrValue = 0;
+
+
         // Getting data for average
 //		while(steamsensor.getValue() > steamSensorMin)		// Place sensor on zone i
         // Getting data for 2000 millisecond
         while(stopTime - startTime <= 2000)		// Place sensor on zone i
         {
+            led.colorSwitcher(PURPLE);
+            led.shine();
         	sensorValue = steamsensor.getValue();
-        	if (sensorValue > steamSensorMin){
+        	if (sensorValue > steamSensorMin + 5){
         		// Si la valeur est supérieure au minimum
         		// On affiche en vert
 	    		led.colorSwitcher(GREEN);
@@ -189,7 +194,7 @@ void loop ()	{
 //             zone = (zone + 1) % 6 ;
 //         }
     }
-	while(stopTime - startTime >= 2000)		// If time is over 2 seconds
+	while(stopTime - startTime > 2000)		// If time is over 2 seconds
 	{
 		led.colorSwitcher(RED);
 		led.shine();
@@ -200,7 +205,7 @@ void loop ()	{
 //            sendAverage();
             stopTime = 0;
             startTime = 0;
-            led.blink(500);
+            led.blink(200);
             zone = (zone + 1) % 6 ;
             return;
         }
