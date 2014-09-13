@@ -66,7 +66,7 @@ void sendAverage(){
 	// Serial.print(", average[zone] :");
 	// Serial.println(average[zone]);
 	// Serial.println(data);
-    sendJson();
+	sendJson();
 	blueTooth.println(average[zone]);
 }
 
@@ -201,8 +201,7 @@ void loop ()	{
 	    average[zone] = map(sum / nbrValue, steamSensorMin, steamSensorMax, 0, 100);	// compute the average
         if (!steamsensor.isAvailable())
         {
-            blueTooth.println(average[zone]);
-//            sendAverage();
+            sendAverage();
             stopTime = 0;
             startTime = 0;
             led.blink(200);
